@@ -21,7 +21,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.sikinijjs.tourismke.AfterSearch;
+import com.example.sikinijjs.tourismke.MoreDetails;
 import com.example.sikinijjs.tourismke.R;
+import com.example.sikinijjs.tourismke.SearchForAPlacce;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -42,31 +44,60 @@ ListView listView;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_locby_type);
-              /*
 
-    movie_theater
-    museum
-    restaurant
-    stadium
-    zoo
-    casino
-    amusement_park
-    aquarium
-
-     */
 
 
         final Spinner spinner = (Spinner)findViewById(R.id.spinner);
         ArrayList<String> options=new ArrayList<String>();
-        options.add("hospital");
+        options.add("movie_theatre");
         options.add("museum");
         options.add("restaurant");
-        options.add("school");
-        options.add("mosque");
-        options.add("insurance_agency");
+        options.add("stadium");
+        options.add("zoo");
+        options.add("aquarium");
+        options.add("amusement_park");
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,options);
         spinner.setAdapter(adapter);
+//spinner2
 
+        final Spinner spinner2 = (Spinner)findViewById(R.id.spinner2);
+        ArrayList<String> options2=new ArrayList<String>();
+        options2.add("Select your county");
+        options2.add("Baringo");
+        options2.add("Bomet");
+        options2.add("Nyeri");
+        options2.add("Kirinyaga");
+        options2.add("Turkana");
+        options2.add("West Pokot");
+        options2.add("Samburu");
+        options2.add("Nairobi");
+        options2.add("Nyamira");
+        options2.add("Kisii");
+
+        options2.add("Migori");
+        options2.add("Homa Bay");
+        options2.add("Kisumu");
+        options2.add("Siaya");
+        options2.add("Busia");
+        options2.add("Bungoma");
+        options2.add("Vihiga");
+        options2.add("Kakamega");
+        options2.add("Bomet");
+        options2.add("Kericho");
+
+        options2.add("Kajiado");
+        options2.add("Narok");
+        options2.add("Nakuru");
+        options2.add("Laikipia");
+        options2.add("Baringo");
+        options2.add("Nandi");
+        options2.add("Elgeyo-Marakwet");
+        options2.add("Uasin Gishu");
+        options2.add("Trans-Nzoia");
+        options2.add("Samburu");
+
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,options2);
+        spinner2.setAdapter(adapter2);
 
 
 
@@ -78,7 +109,23 @@ ListView listView;
             {
                 EditText place_name=(EditText)findViewById(R.id.editText3);
                 nearby= spinner.getSelectedItem().toString();
-                return_cordinates(place_name.getText().toString());
+
+               String place = place_name.getText().toString();
+               String county = spinner2.getSelectedItem().toString().trim();
+
+               Log.d("selected_position", String.valueOf(spinner2.getSelectedItemPosition()));
+
+               if(place.length()<2 && spinner2.getSelectedItemPosition()==0)
+               {
+                   Toast.makeText(SearchLocbyType.this, "Please enter a location or select your county", Toast.LENGTH_SHORT).show();
+               }
+               else if(spinner2.getSelectedItemPosition()!=0 && place.length()>2)
+               {
+                   Toast.makeText(SearchLocbyType.this, "Select either county or place name", Toast.LENGTH_SHORT).show();
+               }
+               else if(place.length()>2)
+                   return_cordinates(place_name.getText().toString());
+               else return_cordinates(county);
 
             }
         });
@@ -92,8 +139,37 @@ ListView listView;
 
                 HashMap<String,String> map =(HashMap)parent.getItemAtPosition(position);
 
+              //  Toast.makeText(SearchLocbyType.this, "", Toast.LENGTH_SHORT).show();
+
+                /*
+                employees.put("place_name", placeName);
+                    employees.put("lat", String.valueOf(lat));
+                    employees.put("distance", String.valueOf(final_distance));
+                    employees.put("lng", String.valueOf(lng));
+                    employees.put("latlng", String.valueOf(lng)+","+String.valueOf(lat));
+                    employees.put("vicinity",vicinity);
+                    employees.put("type",nearby);
+                 */
 
 
+                String latlat [] = map.get("latlng").split(",");
+
+                String lattt = latlat[0];
+                String lon = latlat[1];
+
+                ltln = new LatLng(Double.parseDouble(lon),Double.parseDouble(lattt));
+
+
+
+                startActivity(new Intent(SearchLocbyType.this, AfterSearch.class)
+                        .putExtra("place_name",map.get("place_name"))
+                        .putExtra("Place_id","")
+                        .putExtra("cordinates", map.get("latlang"))
+                        .putExtra("address", "")
+                        .putExtra("Attributions", ""));
+//                Intent intent = new Intent(SearchLocbyType.this, MoreDetails.class);
+//                intent.putExtra("place_name", map.get("place_name"));
+//                startActivity(intent);
 
             }
         });
@@ -105,39 +181,60 @@ ListView listView;
 
     public void return_cordinates(final String adress) {
 
-        final ProgressDialog progressDialog = new ProgressDialog(SearchLocbyType.this);
-        progressDialog.setMessage("Fetching coordinates for "+ adress);
-        progressDialog.show();
 
-        runOnUiThread(new Runnable() {
+         class LongOperation extends AsyncTask<String, Void, String> {
+             final ProgressDialog progressDialog = new ProgressDialog(SearchLocbyType.this);
+             String url;
+             @Override
+             protected void onPreExecute() {
+
+
+                 progressDialog.setMessage("Fetching coordinates for "+ adress);
+                 progressDialog.show();
+                 super.onPreExecute();
+             }
+
+             @Override
+            protected String doInBackground(String... params)
+             {
+
+
+                 Geocoder geocoder = new Geocoder(SearchLocbyType.this);
+                 List<Address> addresses;
+                 try {
+                     addresses = geocoder.getFromLocationName(adress, 1);
+                     if (addresses.size() > 0)
+                     {
+                         latitude = addresses.get(0).getLatitude();
+                         longitude = addresses.get(0).getLongitude();
+                          url = getUrl(latitude, longitude, nearby);
+
+                     }
+                     else
+                     {
+
+                     }
+
+
+                 } catch (IOException e) {
+                     e.printStackTrace();
+                 }
+
+                return "Executed";
+            }
+
             @Override
-            public void run() {
-
-                Geocoder geocoder = new Geocoder(SearchLocbyType.this);
-                List<Address> addresses;
-                try {
-                    addresses = geocoder.getFromLocationName(adress, 1);
-                    if (addresses.size() > 0) {
-                        latitude = addresses.get(0).getLatitude();
-                        longitude = addresses.get(0).getLongitude();
-                        // Toast.makeText(this, String.valueOf(longitude).substring(0,4), Toast.LENGTH_SHORT).show();
-                        String url = getUrl(latitude, longitude, nearby);
-                        progressDialog.dismiss();
-                        fetchdata(url);
-                    }
-                    else
-                    {
-                        progressDialog.dismiss();
-                        Toast.makeText(SearchLocbyType.this, "Location not found!", Toast.LENGTH_SHORT).show();
-                    }
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            protected void onPostExecute(String result) {
+                progressDialog.dismiss();
+                fetchdata(url);
 
             }
-        });
+        }
+
+        new LongOperation().execute();
+
+
+
 
 
 

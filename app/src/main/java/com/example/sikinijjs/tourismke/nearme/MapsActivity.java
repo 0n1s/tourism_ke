@@ -41,18 +41,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LocationListener {
 
 
-    /*
-    places
-    movie_theater
-    museum
-    restaurant
-    stadium
-    zoo
-    casino
-    amusement_park
-    aquarium
-     */
-
     private GoogleMap mMap;
     double latitude;
     double longitude;

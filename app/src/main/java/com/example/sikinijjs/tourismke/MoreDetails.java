@@ -57,7 +57,7 @@ public class MoreDetails extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_more_details);
         Intent intent = getIntent();
-         location_name = intent.getStringExtra("place_name");
+        location_name = intent.getStringExtra("place_name");
         getSupportActionBar().setTitle(location_name);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()

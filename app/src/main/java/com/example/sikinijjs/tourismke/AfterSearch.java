@@ -83,24 +83,7 @@ String location_name;
 
             }
         });
-       btn4=(Button)findViewById(R.id.button4);
-//        Button button5=findViewById(R.id.button5);
-//        button5.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                try
-//                {
-//                    Uri uri = Uri.parse("http://www.kws.go.ke/latest-News");
-//                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-//                    startActivity(intent);
-//                }
-//                catch (Exception ex)
-//                {
-//                    Toast.makeText(AfterSearch.this, "An error has occured!", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
-
+        btn4=(Button)findViewById(R.id.button4);
         WebView webView = findViewById(R.id.webview);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient());
@@ -149,7 +132,7 @@ String location_name;
             protected void onPostExecute(final String s) {
                 super.onPostExecute(s);
                 progressDialog.dismiss();
-              //  Toast.makeText(AfterSearch.this, "result"+s, Toast.LENGTH_LONG).show();
+               //Toast.makeText(AfterSearch.this, "result"+s, Toast.LENGTH_LONG).show();
 
 
                 try {

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "57522128562",
+    "firebase_url": "https://tourismke-f73d6.firebaseio.com",
+    "project_id": "tourismke-f73d6",
+    "storage_bucket": "tourismke-f73d6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:57522128562:android:364b175d85c77aff",
+        "android_client_info": {
+          "package_name": "com.tourismke"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "57522128562-1ot5072d8fm70spnpsrtg2fptcm0mqr8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tourismke",
+            "certificate_hash": "3793fefcd7b9ad28b270b902e6af142df24e4ed1"
+          }
+        },
+        {
+          "client_id": "57522128562-her4mo8kt1v97luvckmqum5lh6euq24v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxak1dnvbQoksiti9L7vcRYMMBAUcatKM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "57522128562-her4mo8kt1v97luvckmqum5lh6euq24v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
