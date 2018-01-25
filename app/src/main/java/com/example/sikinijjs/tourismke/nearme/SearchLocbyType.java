@@ -1,5 +1,6 @@
 package com.example.sikinijjs.tourismke.nearme;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Address;
@@ -21,6 +22,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.sikinijjs.tourismke.AfterSearch;
+import com.example.sikinijjs.tourismke.Function;
 import com.example.sikinijjs.tourismke.MoreDetails;
 import com.example.sikinijjs.tourismke.R;
 import com.example.sikinijjs.tourismke.SearchForAPlacce;
@@ -101,7 +103,33 @@ ListView listView;
 
 
 
+Button button7 = findViewById(R.id.button7);
+button7.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
 
+        EditText place_name=(EditText)findViewById(R.id.editText3);
+        nearby= spinner.getSelectedItem().toString();
+
+        String place = place_name.getText().toString();
+        String county = spinner2.getSelectedItem().toString().trim();
+
+        Log.d("selected_position", String.valueOf(spinner2.getSelectedItemPosition()));
+
+        if(place.length()<2 && spinner2.getSelectedItemPosition()==0)
+        {
+            Toast.makeText(SearchLocbyType.this, "Please enter a location or select your county", Toast.LENGTH_SHORT).show();
+        }
+        else if(spinner2.getSelectedItemPosition()!=0 && place.length()>2)
+        {
+            Toast.makeText(SearchLocbyType.this, "Select either county or place name", Toast.LENGTH_SHORT).show();
+        }
+        else if(place.length()>2)
+            return_cordinates(place_name.getText().toString());
+        else return_cordinates(county);
+
+    }
+});
         Button button = (Button)findViewById(R.id.button2);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,6 +207,33 @@ ListView listView;
 
     }
 
+    public void return_weather(final String location)
+    {
+
+
+        Function.placeIdTask asyncTask =new Function.placeIdTask(new Function.AsyncResponse()
+        {
+            public void processFinish(String weather_city, String weather_description, String weather_temperature, String weather_humidity, String weather_pressure, String weather_updatedOn, String weather_iconText, String sun_rise) {
+//
+//                cityField.setText(weather_city);
+//                updatedField.setText(weather_updatedOn);
+//                detailsField.setText(weather_description);
+//                currentTemperatureField.setText(weather_temperature);
+//                humidity_field.setText("Humidity: "+weather_humidity);
+//                pressure_field.setText("Pressure: "+weather_pressure);
+//                weatherIcon.setText(Html.fromHtml(weather_iconText));
+
+                new AlertDialog.Builder(SearchLocbyType.this)
+                        .setTitle("Weather for "+location)
+                        .setMessage("City "+weather_city+"\nUpdated on "+weather_updatedOn+"\n"+"weather_temperature"+weather_temperature
+                        +"\nweather_description"+weather_description)
+                .setNegativeButton("okay", null).show();
+
+            }
+        });
+        asyncTask.execute(String.valueOf(latitude), String.valueOf(longitude)); //  asyncTask.execute("Latitude", "Longitude")
+
+    }
     public void return_cordinates(final String adress) {
 
 
@@ -227,6 +282,7 @@ ListView listView;
             protected void onPostExecute(String result) {
                 progressDialog.dismiss();
                 fetchdata(url);
+                return_weather(adress);
 
             }
         }
